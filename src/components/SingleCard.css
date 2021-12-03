@@ -2,24 +2,29 @@
     position: relative;
 
 }
-
-.card img {
-    width: 100%;
-    display: block;
-    border: 2px solid white;
-    border-radius: 6px;
-}
-
 .card .front {
     transform: rotateY(90deg);
     transition: all ease-in 0.2s;
     position: absolute;
+    border: 2px solid white;
+    border-radius: 6px;
 }
 .flipped .front {
     transform: rotateY(0deg);
     transition-delay: 0.2s;
+}
+.front .img-container {
+    display: flex;
+    justify-content: center;
 
 }
+.card img {
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+}
+
+
 
 .card .back {
     border: 2px solid white;
@@ -28,7 +33,8 @@
     transition-delay: 0.2s;
     width: 200px;
     height: 200px;
-    background-color: rgb(0, 38, 95);
+    background-repeat: repeat;
+    background-color: blue;
 }
 .flipped .back {
     transform: rotateY(90deg);

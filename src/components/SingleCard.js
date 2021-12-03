@@ -11,11 +11,14 @@ export default function SingleCard({ card, handleChoice, flipped, disabled }) {
 	return (
 		<div className="card" >
 			<div className={flipped ? "flipped" : ""}>
-					<img 
-						className="front" 
-						src={card.src} 
-						alt="card front" 
-					/>
+					<div className="front">
+						<div className="img-container">
+							<img 
+								src={card.src} 
+								alt="card front" 
+							/>
+						</div>
+					</div>
 					<div
 						className="back"
 						style={{ backgroundImage: "url('/img/escheresque.png')"}}

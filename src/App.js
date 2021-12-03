@@ -18,15 +18,37 @@ function App() {
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
 
-  const shuffleCards = () => {
-    const shuffledCards = [...cardImages, ...cardImages]
-      .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random() }))
+  const fetchCats = async () => {
+    const url = "https://api.thecatapi.com/v1/images/search?limit=6"
 
-    setCards(shuffledCards)
-    setChoiceOne(null)
-    setChoiceTwo(null)
-    setTurns(0)
+    try {
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(res.statusText)
+      const data = await res.json()
+
+      return data
+    } catch {
+      console.log('Error fetching kitties')
+    }
+
+  }
+
+  const shuffleCards = () => {
+
+    fetchCats().then(data => {
+      const catCards = data.map(cat => {
+        return {src: cat.url, matched: false}
+      })
+
+      const shuffledCards = [...catCards, ...catCards]
+        .sort(() => Math.random() - 0.5)
+        .map((card) => ({ ...card, id: Math.random() }))
+
+      setCards(shuffledCards)
+      setChoiceOne(null)
+      setChoiceTwo(null)
+      setTurns(0)
+    })
   }
 
   const handleChoice = (card) => {
