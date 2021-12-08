@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import MessageBox from './components/MessageBox'
 import SingleCard from './components/SingleCard'
 
-const cardImages = [
-    { "src": "/img/sword-1.png", matched: false },
-    { "src": "/img/helmet-1.png", matched: false },
-    { "src": "/img/potion-1.png", matched: false },
-    { "src": "/img/ring-1.png", matched: false },
-    { "src": "/img/scroll-1.png", matched: false },
-    { "src": "/img/shield-1.png", matched: false },
-]
 
 function App() {
   const [cards, setCards] = useState([])
@@ -17,24 +10,27 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState("A new set of cats every game!")
 
   const fetchCats = async () => {
     const url = "https://api.thecatapi.com/v1/images/search?limit=6"
-
+    setIsLoading(true)
     try {
       const res = await fetch(url)
       if (!res.ok) throw new Error(res.statusText)
       const data = await res.json()
 
+      setIsLoading(false)
       return data
     } catch {
-      console.log('Error fetching kitties')
+      setMessage("Error fetching cats 😪")
     }
 
   }
 
   const shuffleCards = () => {
-
+    setCards([])
     fetchCats().then(data => {
       const catCards = data.map(cat => {
         return {src: cat.url, matched: false}
@@ -52,6 +48,7 @@ function App() {
   }
 
   const handleChoice = (card) => {
+    setMessage(null)
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
@@ -71,6 +68,7 @@ function App() {
           })
         })
         resetTurn()
+        setMessage("Match!")
       } else { // no match, flip cards back
         setTimeout(() => resetTurn(), 1000)
       }
@@ -86,17 +84,14 @@ function App() {
     setDisabled(false)
   }
   
-  // useEffect(() => {
-  //   shuffleCards()
-  // }, [])
-
   return (
     <div className="App">
       <h1>Cat Match</h1>
-      <h2>A different set of cats every time!</h2>
       <button onClick={shuffleCards}>New Game</button>
+      <span>Turns: {turns}</span>
 
       <div className="card-grid">
+        {isLoading && <h1>Loading Cats...</h1>}
         {cards && cards.map(card => (
           <SingleCard 
             key={card.id} 
@@ -107,7 +102,7 @@ function App() {
           />
         ))}
       </div>
-      <p>Turns: {turns}</p>
+      <MessageBox message={message}/>
     </div>
   );
 }
