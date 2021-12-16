@@ -1,8 +1,19 @@
 .App {
-  max-width: 860px;
+  max-width: 880px;
   margin: 40px auto;
   text-align: center;
 }
+header {
+  display: flex;
+  align-items: center;
+}
+header .turns {
+  margin: auto;
+}
+header h1, header button {
+  margin: 0;
+}
+
 button {
   display: inline;
   margin: 0 .4em;
@@ -21,6 +32,6 @@ button:hover {
 .card-grid {
   margin-top: 40px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }

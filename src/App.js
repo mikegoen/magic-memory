@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import './App.css'
 import MessageBox from './components/MessageBox'
 import SingleCard from './components/SingleCard'
+
+import './App.css'
 
 
 function App() {
@@ -10,18 +11,18 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("A new set of cats every game!")
 
   const fetchCats = async () => {
     const url = "https://api.thecatapi.com/v1/images/search?limit=6"
-    setIsLoading(true)
+    setMessage("Loading Cats...")
     try {
       const res = await fetch(url)
-      if (!res.ok) throw new Error(res.statusText)
+      if (!res.ok) {
+        throw new Error(res.statusText)
+      }
       const data = await res.json()
 
-      setIsLoading(false)
       return data
     } catch {
       setMessage("Error fetching cats 😪")
@@ -31,20 +32,21 @@ function App() {
 
   const shuffleCards = () => {
     setCards([])
-    fetchCats().then(data => {
-      const catCards = data.map(cat => {
-        return {src: cat.url, matched: false}
+    fetchCats()
+      .then(data => {
+        const catCards = data.map(cat => {
+          return {src: cat.url, matched: false}
+        })
+        const shuffledCards = [...catCards, ...catCards]
+          .sort(() => Math.random() - 0.5)
+          .map((card) => ({ ...card, id: Math.random() }))
+    
+        setCards(shuffledCards)
+        setMessage(null)
+        setChoiceOne(null)
+        setChoiceTwo(null)
+        setTurns(0)    
       })
-
-      const shuffledCards = [...catCards, ...catCards]
-        .sort(() => Math.random() - 0.5)
-        .map((card) => ({ ...card, id: Math.random() }))
-
-      setCards(shuffledCards)
-      setChoiceOne(null)
-      setChoiceTwo(null)
-      setTurns(0)
-    })
   }
 
   const handleChoice = (card) => {
@@ -86,12 +88,13 @@ function App() {
   
   return (
     <div className="App">
-      <h1>Cat Match</h1>
-      <button onClick={shuffleCards}>New Game</button>
-      <span>Turns: {turns}</span>
+      <header>
+        <h1>Cat Match</h1>
+        <span className='turns'>Turns: {turns}</span>
+        <button onClick={shuffleCards}>New Game</button>
+      </header>
 
       <div className="card-grid">
-        {isLoading && <h1>Loading Cats...</h1>}
         {cards && cards.map(card => (
           <SingleCard 
             key={card.id} 

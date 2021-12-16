@@ -1,6 +1,6 @@
 .card {
     position: relative;
-    user-select: none
+    user-select: none;
 }
 .card .front {
     transform: rotateY(90deg);
@@ -34,7 +34,7 @@
     width: 200px;
     height: 200px;
     background-repeat: repeat;
-    background-color: blue;
+    background-color: var(--card-back);
 }
 .flipped .back {
     transform: rotateY(90deg);

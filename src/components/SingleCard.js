@@ -9,7 +9,7 @@ export default function SingleCard({ card, handleChoice, flipped, disabled }) {
 	}
 
 	return (
-		<div className="card" >
+		<div className="card" style={disabled ? {cursor: "default"} : {cursor: "pointer"}}>
 			<div className={flipped ? "flipped" : ""}>
 					<div className="front">
 						<div className="img-container">
@@ -21,7 +21,7 @@ export default function SingleCard({ card, handleChoice, flipped, disabled }) {
 					</div>
 					<div
 						className="back"
-						style={{ backgroundImage: "url('/img/escheresque.png')"}}
+						style={{ backgroundImage: "url('/img/diamond-upholstery.png')"}}
 						onClick={handleClick} 
 						alt="card back" 
 					/>
