@@ -54,12 +54,13 @@ function App() {
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
-  // compare 2 selected cards
   useEffect(() => {
-    if (choiceOne && choiceTwo) {
+    if (choiceOne && choiceTwo) { // two cards have been selected
       setDisabled(true)
 
-      if (choiceOne.src === choiceTwo.src) { // cards match
+      // if cards match, update their state
+      if (choiceOne.src === choiceTwo.src) {
+        let updatedCards; 
         setCards(prevCards => {
           return prevCards.map(card => {
             if (card.src === choiceOne.src) {
@@ -69,22 +70,32 @@ function App() {
             }
           })
         })
-        resetTurn()
         setMessage("Match!")
-      } else { // no match, flip cards back
-        setTimeout(() => resetTurn(), 1000)
+        setChoiceOne(null)
+        setChoiceTwo(null)
+        setTurns(prevTurns => prevTurns + 1)
+        setDisabled(false)  
+      } 
+      // no match, flip cards back
+      else { 
+        setTimeout(() => {
+          setChoiceOne(null)
+          setChoiceTwo(null)
+          setTurns(prevTurns => prevTurns + 1)
+          setDisabled(false)
+        }, 1000)
       }
     }
-
+    
   }, [choiceOne, choiceTwo])
-
-  // reset choices and increase turn 
-  const resetTurn = () => {
-    setChoiceOne(null)
-    setChoiceTwo(null)
-    setTurns(prevTurns => prevTurns + 1)
-    setDisabled(false)
-  }
+  
+  useEffect(() => {
+    // check if game is won
+    if (!cards.some((card) => card.matched===false) && cards.length > 0) { 
+      setMessage("Winner! Play Again?")
+      setTurns(prevTurns => prevTurns + 1)
+    }
+  }, [cards])
   
   return (
     <div className="App">
