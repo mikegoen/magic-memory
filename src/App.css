@@ -1,15 +1,14 @@
 .App {
   max-width: 880px;
-  margin: 40px auto;
+  margin: 20px auto;
   text-align: center;
 }
 header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
-header .turns {
-  margin: auto;
-}
+
 header h1, header button {
   margin: 0;
 }

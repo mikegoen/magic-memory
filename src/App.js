@@ -11,11 +11,12 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("A new set of cats every game!")
+  const uniqueCardCount = 6;
 
   const fetchCats = async () => {
-    const url = "https://api.thecatapi.com/v1/images/search?limit=6"
-    setMessage("Loading Cats...")
+    const url = "https://api.thecatapi.com/v1/images/search?limit="+uniqueCardCount
     try {
       const res = await fetch(url)
       if (!res.ok) {
@@ -27,11 +28,11 @@ function App() {
     } catch {
       setMessage("Error fetching cats 😪")
     }
-
   }
 
   const shuffleCards = () => {
     setCards([])
+    setLoading(true)
     fetchCats()
       .then(data => {
         const catCards = data.map(cat => {
@@ -54,13 +55,20 @@ function App() {
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
+  let imgLoadedCounter = 0;
+  const handleImgLoaded = () => {
+    imgLoadedCounter++;
+    if (imgLoadedCounter === uniqueCardCount*2 ) {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (choiceOne && choiceTwo) { // two cards have been selected
       setDisabled(true)
 
       // if cards match, update their state
       if (choiceOne.src === choiceTwo.src) {
-        let updatedCards; 
         setCards(prevCards => {
           return prevCards.map(card => {
             if (card.src === choiceOne.src) {
@@ -110,12 +118,15 @@ function App() {
           <SingleCard 
             key={card.id} 
             card={card}
-            handleChoice={handleChoice}  
+            handleChoice={handleChoice}
+            handleImgLoaded={handleImgLoaded}  
             flipped={card === choiceOne || card === choiceTwo || card.matched}
             disabled={disabled}
+            loading={loading}
           />
         ))}
       </div>
+      {loading && <MessageBox message="Loading cats..." /> }
       <MessageBox message={message}/>
     </div>
   );
