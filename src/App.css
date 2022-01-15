@@ -1,16 +1,20 @@
 .App {
   max-width: 880px;
-  margin: 20px auto;
+  margin: 0 auto;
   text-align: center;
 }
-header {
+.game-header {
   display: flex;
+  margin: 0;
   align-items: center;
   justify-content: space-between;
 }
-
-header h1, header button {
+.game-header h1 {
   margin: 0;
+}
+.go-back {
+  display: flex;
+  justify-content: end;
 }
 
 button {
@@ -24,6 +28,7 @@ button {
   cursor: pointer;
   font-size: 1em;
 }
+
 button:hover {
   background: #c23866;
   color: #fff;
